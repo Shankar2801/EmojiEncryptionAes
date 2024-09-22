@@ -1,0 +1,118 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+  font-family: sans-serif;
+}
+
+.toggle-buttons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.toggle-buttons button {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 5px;
+  background-color: #ddd;
+  cursor: pointer;
+}
+
+.toggle-buttons .active {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 400px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.show-encryption {
+  background-color: #f0f8ff; 
+}
+
+.show-decryption {
+  background-color: #f0f8ff; 
+}
+.head
+{
+  text-align: center; 
+  margin-bottom: 20px;
+}
+.show-encryption.show-encryption, .show-decryption.show-decryption {
+  display: block;
+}
+
+h2 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+input[type="text"], textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
+
+textarea {
+  height: 100px;
+  resize: vertical;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #45a049;
+}
+
+p {
+  margin-bottom: 10px;
+}
+
+p.error {
+  color: red;
+}
+/* ... (Previous CSS code) */
+
+.footer {
+  background-color: #333; 
+  color: white; 
+  padding: 15px;
+  text-align: center;
+  margin-top: 20px; 
+  position: fixed;
+  bottom: 0;
+  width: 100%; 
+}
+
+.footer p {
+  margin: 0;
+}
