@@ -40,6 +40,18 @@
   background-color: #4CAF50;
   color: white;
 }
+.password-container {
+  display: flex;
+  align-items: center;
+}
+
+.eye-icon {
+  
+  margin-left: -30px;
+  margin-top: -15px;
+  cursor: pointer;
+}
+
 
 .content {
   display: flex;
