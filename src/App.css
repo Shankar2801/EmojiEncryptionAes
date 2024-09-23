@@ -8,6 +8,20 @@
   font-family: sans-serif;
 }
 
+.header {
+  background-color: #f0f0f0; 
+  padding: 1rem;
+  text-align: center;
+  position: relative; 
+  animation: moveHeader 10s linear infinite;
+}
+
+@keyframes moveHeader {
+  0% { transform: translateX(0); }
+  50% { transform: translateX(50px); }
+  100% { transform: translateX(0); }
+}
+
 .toggle-buttons {
   display: flex;
   gap: 10px;
@@ -73,6 +87,14 @@ input[type="text"], textarea {
   border-radius: 5px;
   box-sizing: border-box;
 }
+input[type="password"], textarea {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
+}
 
 textarea {
   height: 100px;
@@ -82,7 +104,7 @@ textarea {
 button {
   padding: 10px 20px;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   background-color: #4CAF50;
   color: white;
   cursor: pointer;
@@ -105,9 +127,9 @@ p.error {
 .footer {
   background-color: #333; 
   color: white; 
-  padding: 15px;
+  padding: 1px;
   text-align: center;
-  margin-top: 20px; 
+  margin-top: 10px; 
   position: fixed;
   bottom: 0;
   width: 100%; 
