@@ -1,6 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CryptoJS from 'crypto-js';
 import './App.css'; 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons';
+
 
 const emojiMap = {
   'a': '🍎', 'b': '🍌', 'c': '🏎', 'd': '🚪', 'e': '👁', 'f': '👣', 'g': '😀', 'h': '🖐',
@@ -13,12 +16,9 @@ const emojiMap = {
   '4': '☺', '5': '😊', '6': '😇', '7': '😡', '8': '🎃', '9': '😍', '+': '✅', '/': '🔪',
   '=': '🗒'
 };
-
-
-
-
-
 function App() {
+ 
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [message, setMessage] = useState('');
   const [key, setKey] = useState('');
   const [decryptionKey, setDecryptionKey] = useState('');
@@ -29,6 +29,12 @@ function App() {
   const [isEncryptionView, setIsEncryptionView] = useState(true); 
   const headerRef = useRef(null);
 
+
+  const togglePasswordVisibility = () => {
+    setIsPasswordVisible(!isPasswordVisible);
+  };
+
+/**Encryption process**/
   const handleEncrypt = () => {
     try {
       const encrypted = CryptoJS.AES.encrypt(message, key).toString();
@@ -40,6 +46,7 @@ function App() {
     }
   };
 
+/**Decryption process**/
   const handleDecrypt = () => {
     try {
       let unemojified = manualEncryptedInput;
@@ -48,13 +55,19 @@ function App() {
       }
       const bytes = CryptoJS.AES.decrypt(unemojified, decryptionKey);
       const decrypted = bytes.toString(CryptoJS.enc.Utf8);
+      if (!decrypted) {
+        throw new Error('Invalid decryption key or corrupted message.');
+      }
+  
       setDecryptedMessage(decrypted);
-      setError('');
+      setError('');  
     } catch (err) {
-      setError('Decryption failed. Please check your key and encrypted message.');
+      
+      setError('Decryption failed. Invalid key or Message.');
     }
   };
-
+  
+/**Clipborad**/
   const copyToClipboard = (text) => {
     navigator.clipboard.writeText(text)
       .then(() => {
@@ -65,6 +78,7 @@ function App() {
       });
   };
 
+/**Share Message**/
   const shareMessage = (text) => {
     if (navigator.share) {
       navigator.share({
@@ -78,13 +92,13 @@ function App() {
     }
   };
 
+
   useEffect(() => {
     const header = headerRef.current;
     if (header) {
       header.style.animation = 'moveHeader 10s linear infinite';
     }
    
-  
 
     return () => {
       if (header) {
@@ -93,6 +107,7 @@ function App() {
     };
   }, []); 
 
+  
   return (
   <div className="container">
       <header className="header" ref={headerRef}>
@@ -113,35 +128,45 @@ function App() {
           Decryption
         </button>
       </div>
-
+      
       <div className={`content ${isEncryptionView ? 'show-encryption' : 'show-decryption'}`}>
         {isEncryptionView ? (
           <div className="encryption-section">
-            <h2> Encryption</h2>
-            <div>
-              <label htmlFor="message-encrypt">Message:</label>
+             <div>
+              <label htmlFor="message-encrypt">Message</label>
               <input
                 type="text"
+                placeholder='E.g: "Hello world"'
                 id="message-encrypt"
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
             </div>
-            <div>
-            <label htmlFor="key-encrypt"> Enter Key :</label>
-            <input
-              type="password" 
-              id="key-encrypt"
-              value={key}
-              onChange={(e) => setKey(e.target.value)}
-            />
-           
-          </div>
+      <div>
+        <label htmlFor="key-encrypt">Enter Key</label>
+        <div className="password-container">
+         
+          <input
+            type={isPasswordVisible ? 'text' : 'password'}
+            placeholder="password"
+            id="key-encrypt"
+            value={key}
+            onChange={(e) => setKey(e.target.value)}
+          />
+          <FontAwesomeIcon
+            icon={isPasswordVisible ? faEyeSlash : faEye}
+            onClick={togglePasswordVisibility} 
+            className="eye-icon"
+          />
+        
+          
+        </div>
+      </div>
             <button onClick={handleEncrypt}>Encrypt</button>
 
             {encryptedEmojis && (
               <div>
-                <h3>Encrypted Message (Emojis):</h3>
+                <h3>Encrypted Message (Emojis)</h3>
                 <p>{encryptedEmojis}</p>
                 <button onClick={() => copyToClipboard(encryptedEmojis)}>
                   Copy message
@@ -152,29 +177,39 @@ function App() {
                 </button>
               </div>
             )}
-            {/* Error message display */}
+            
             {error && <p style={{ color: 'red' }}>{error}</p>} 
           </div>
+
         ) : (
           <div className="decryption-section">
-            <h2> Decryption</h2>
+            
             <div>
-              <label htmlFor="encrypted-message-decrypt">Encrypted Message (Emojis):</label>
+              <label htmlFor="encrypted-message-decrypt">Message in Emojis</label>
               <textarea
                 id="encrypted-message-decrypt"
+                placeholder="Message in Emojis"
                 value={manualEncryptedInput}
                 onChange={(e) => setManualEncryptedInput(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="key-decrypt"> Decryption Key:</label>
-              <input
-                type="password"
-                id="key-decrypt"
-                value={decryptionKey}
-                onChange={(e) => setDecryptionKey(e.target.value)}
-              />
-            </div>
+          <div>
+          <label htmlFor="key-decrypt">Enter Key</label>
+         <div className="password-container">
+          <input
+            type={isPasswordVisible ? 'text' : 'password'}
+            placeholder="password"
+            id="key-decrypt"
+            value={decryptionKey}
+            onChange={(e) => setDecryptionKey(e.target.value)}
+          />
+          <FontAwesomeIcon
+            icon={isPasswordVisible ? faEyeSlash : faEye}
+            onClick={togglePasswordVisibility} 
+            className="eye-icon"
+          />
+        </div>
+      </div>
             <button onClick={handleDecrypt}>Decrypt</button>
 
             {decryptedMessage && (
@@ -184,7 +219,7 @@ function App() {
                 <button onClick={() => copyToClipboard(decryptedMessage)}>Copy Decrypted Message</button>
               </div>
             )}
-            {/* Error message display */}
+            
             {error && <p style={{ color: 'red' }}>{error}</p>}
           </div>
         )}
