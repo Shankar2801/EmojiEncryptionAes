@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import CryptoJS from 'crypto-js';
 import './App.css'; 
 
@@ -14,6 +14,10 @@ const emojiMap = {
   '=': '🗒'
 };
 
+
+
+
+
 function App() {
   const [message, setMessage] = useState('');
   const [key, setKey] = useState('');
@@ -22,8 +26,8 @@ function App() {
   const [decryptedMessage, setDecryptedMessage] = useState('');
   const [error, setError] = useState('');
   const [manualEncryptedInput, setManualEncryptedInput] = useState('');
-  const [isEncryptionView, setIsEncryptionView] = useState(true); // Toggle view
-  
+  const [isEncryptionView, setIsEncryptionView] = useState(true); 
+  const headerRef = useRef(null);
 
   const handleEncrypt = () => {
     try {
@@ -74,22 +78,33 @@ function App() {
     }
   };
 
-  return (
+  useEffect(() => {
+    const header = headerRef.current;
+    if (header) {
+      header.style.animation = 'moveHeader 10s linear infinite';
+    }
+   
   
-    
-     
-    <div className="container">
-      
-      <div className="head">
+
+    return () => {
+      if (header) {
+        header.style.animation = ''; 
+      }
+    };
+  }, []); 
+
+  return (
+  <div className="container">
+      <header className="header" ref={headerRef}>
         <h1>Emoji Encryption Messenger</h1>
-      </div>
-      
+      </header>
+
       <div className="toggle-buttons">
         <button
           className={isEncryptionView ? 'active' : ''}
           onClick={() => setIsEncryptionView(true)}
         >
-          Encryption
+         Encryption
         </button>
         <button
           className={!isEncryptionView ? 'active' : ''}
@@ -102,7 +117,7 @@ function App() {
       <div className={`content ${isEncryptionView ? 'show-encryption' : 'show-decryption'}`}>
         {isEncryptionView ? (
           <div className="encryption-section">
-            <h2>🔒Encryption</h2>
+            <h2> Encryption</h2>
             <div>
               <label htmlFor="message-encrypt">Message:</label>
               <input
@@ -113,28 +128,36 @@ function App() {
               />
             </div>
             <div>
-              <label htmlFor="key-encrypt">🔑Key (Size: 16, 24, or 32 characters):</label>
-              <input
-                type="text"
-                id="key-encrypt"
-                value={key}
-                onChange={(e) => setKey(e.target.value)}
-              />
-            </div>
+            <label htmlFor="key-encrypt"> Enter Key :</label>
+            <input
+              type="password" 
+              id="key-encrypt"
+              value={key}
+              onChange={(e) => setKey(e.target.value)}
+            />
+           
+          </div>
             <button onClick={handleEncrypt}>Encrypt</button>
 
             {encryptedEmojis && (
               <div>
                 <h3>Encrypted Message (Emojis):</h3>
                 <p>{encryptedEmojis}</p>
-                <button onClick={() => copyToClipboard(encryptedEmojis)}>Copy Encrypted Message</button>
-                <button onClick={() => shareMessage(encryptedEmojis)}>Share Encrypted Message</button>
+                <button onClick={() => copyToClipboard(encryptedEmojis)}>
+                  Copy message
+                </button>
+
+                <button onClick={() => shareMessage(encryptedEmojis)}>
+                  Share message
+                </button>
               </div>
             )}
+            {/* Error message display */}
+            {error && <p style={{ color: 'red' }}>{error}</p>} 
           </div>
         ) : (
           <div className="decryption-section">
-            <h2>🔓Decryption</h2>
+            <h2> Decryption</h2>
             <div>
               <label htmlFor="encrypted-message-decrypt">Encrypted Message (Emojis):</label>
               <textarea
@@ -144,9 +167,9 @@ function App() {
               />
             </div>
             <div>
-              <label htmlFor="key-decrypt">🔑Decryption Key:</label>
+              <label htmlFor="key-decrypt"> Decryption Key:</label>
               <input
-                type="text"
+                type="password"
                 id="key-decrypt"
                 value={decryptionKey}
                 onChange={(e) => setDecryptionKey(e.target.value)}
@@ -156,11 +179,13 @@ function App() {
 
             {decryptedMessage && (
               <div>
-                <h3>Decrypted Message:</h3>
+                <h4>Decrypted Message:</h4>
                 <p>{decryptedMessage}</p>
                 <button onClick={() => copyToClipboard(decryptedMessage)}>Copy Decrypted Message</button>
               </div>
             )}
+            {/* Error message display */}
+            {error && <p style={{ color: 'red' }}>{error}</p>}
           </div>
         )}
         
@@ -169,7 +194,7 @@ function App() {
         <p>Made in @{new Date().getFullYear()}</p>
       </footer>
 
-      {error && <p style={{ color: 'red' }}>{error}</p>}
+     
     </div>
   );
 }
