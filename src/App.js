@@ -165,7 +165,7 @@ function App() {
             <button onClick={handleEncrypt}>Encrypt</button>
 
             {encryptedEmojis && (
-              <div>
+              <div id="clip">
                 <h3>Encrypted Message (Emojis)</h3>
                 <p>{encryptedEmojis}</p>
                 <button onClick={() => copyToClipboard(encryptedEmojis)}>
