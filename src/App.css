@@ -150,3 +150,8 @@ p.error {
 .footer p {
   margin: 0;
 }
+
+#clip{
+  display: flex;
+  justify-content: space-evenly;
+}
